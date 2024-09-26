@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate Model Prediction</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #eef2f3;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 30px 0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin: 0;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            color: #2980b9;
+        }
+
+        .summary, .card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .summary h2 {
+            color: #00796b;
+            margin-top: 0;
+        }
+
+        .prediction {
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #34495e;
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .value {
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        .co2-data {
+            margin-top: 20px;
+        }
+
+        .co2-data h3 {
+            margin-bottom: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Climate Model Predictions</h1>
+            <p>Today's and Tomorrow's Predictions in the USA</p>
+        </header>
+
+        <div class="summary">
+            <h2>Weather Summary</h2>
+            <div class="prediction">
+                {% if td1.shape[0]>0 and td2.shape[0]>0 %}
+                <h3>Today's Weather</h3>
+                <p>Condition: <span class="value" id="todayCondition">
+                    {% if f1 | length>0 %}
+                        {% for item in f1 %}
+                            {{item}},
+                        {% endfor %}
+                    {% endif %}
+                </span></p>
+                <p>Temperature: <span class="value">{{'%.2f' | format(td1[2])}}°C</span> - <span class="value">{{'%.2f' | format(td1[1])}}°C</span></p>
+                <p>Humidity: <span class="value">{{'%.2f' | format(td1[3])}}%</span></p>
+                <p>Wind: <span class="value">{{'%.2f' | format(td2[3])}}mph</span> from <span class="value">{{'%.2f' | format(td1[4])}}°N</span></p>
+                {% endif %}
+            </div>
+            <div class="prediction">
+                {% if td1.shape[0]>0 and td2.shape[0]>0 %}
+                <h3>Tomorrow's Weather</h3>
+                <p>Condition: <span class="value" id="tomorrowCondition">
+                {% if f2 | length>0 %}
+                    {% for item in f2 %}
+                        {{item}},
+                    {% endfor %}
+                {% endif %}</span></p>
+                <p>Temperature: <span class="value">{{'%.2f' | format(tm1[2])}}°C</span> - <span class="value">{{'%.2f' | format(tm1[1])}}°C</span></p>
+                <p>Humidity: <span class="value">{{'%.2f' | format(tm1[3])}}%</span></p>
+                <p>Wind: <span class="value">{{'%.2f' | format(tm2[3])}}mph</span> from <span class="value">{{'%.2f' | format(td1[4])}}°N</span></p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card">
+            {% if td1.shape[0]>0 and td2.shape[0]>0 %}
+            <h2>Today's Predictions</h2>
+            <div class="prediction">
+                <h3>Temperature</h3>
+                <p>Min: <span class="value">{{'%.2f' | format(td1[2])}}°C</span></p>
+                <p>Max: <span class="value">{{'%.2f' | format(td1[1])}}°C</span></p>
+                <p>Avg: <span class="value">{{'%.2f' | format(td1[0])}}°C</span></p>
+            </div>
+            <div class="prediction">
+                <h3>Humidity</h3>
+                <p><span class="value">{{'%.2f' | format(td1[3])}}%</span></p>
+                <h3>Dew</h3>
+                <p><span class="value">{{'%.2f' | format(td1[6])}}</span></p>
+                <h3>UV Index</h3>
+                <p><span class="value">{{'%.2f' | format(td1[7])}}</span></p>
+            </div>
+            <div class="prediction">
+                <h3>Wind</h3>
+                <p>Speed: <span class="value">{{'%.2f' | format(td2[3])}}mph</span></p>
+                <p>Direction: <span class="value">{{'%.2f' | format(td2[4])}}°N</span></p>
+                <p>Gust: <span class="value">{{'%.2f' | format(td2[2])}}mph</span></p>
+            </div>
+            <div class="prediction">
+                <h3>Solar Energy</h3>
+                <p>Radiation: <span class="value">{{'%.2f' | format(td1[5])}}W/m²</span></p>
+            </div>
+            <div class="prediction">
+                <h3>Precipitation</h3>
+                <p>Probability: <span class="value">{{'%.2f' | format(td2[6])}}%</span></p>
+                <p>Amount: <span class="value">{{'%.2f' | format(td2[5])}}in</span></p>
+            </div>
+            <div class="prediction">
+                <h3>Snow</h3>
+                <p>Depth: <span class="value">{{'%.2f' | format(td2[1])}}mm</span></p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            {% if td1.shape[0]>0 and td2.shape[0]>0 %}
+            <h2>Tomorrow's Predictions</h2>
+            <div class="prediction">
+                <h3>Temperature</h3>
+                <p>Min: <span class="value">{{'%.2f' | format(tm1[2])}}°C</span></p>
+                <p>Max: <span class="value">{{'%.2f' | format(tm1[1])}}°C</span></p>
+                <p>Avg: <span class="value">{{'%.2f' | format(tm1[0])}}°C</span></p>
+            </div>
+            <div class="prediction">
+                <h3>Humidity</h3>
+                <p><span class="value">{{'%.2f' | format(tm1[3])}}%</span></p>
+                <h3>Dew</h3>
+                <p><span class="value">{{'%.2f' | format(tm1[6])}}</span></p>
+                <h3>UV Index</h3>
+                <p><span class="value">{{'%.2f' | format(tm1[7])}}</span></p>
+            </div>
+            <div class="prediction">
+                <h3>Wind</h3>
+                <p>Speed: <span class="value">{{'%.2f' | format(tm2[3])}}mph</span></p>
+                <p>Direction: <span class="value">{{'%.2f' | format(tm2[4])}}°N</span></p>
+                <p>Gust: <span class="value">{{'%.2f' | format(tm2[2])}}mph</span></p>
+            </div>
+            <div class="prediction">
+                <h3>Solar Energy</h3>
+                <p>Radiation: <span class="value">{{'%.2f' | format(tm1[5])}}W/m²</span></p>
+            </div>
+            <div class="prediction">
+                <h3>Precipitation</h3>
+                <p>Probability: <span class="value">{{'%.2f' | format(tm2[6])}}%</span></p>
+                <p>Amount: <span class="value">{{'%.2f' | format(tm2[5])}}in</span></p>
+            </div>
+            <div class="prediction">
+                <h3>Snow</h3>
+                <p>Depth: <span class="value">{{'%.2f' | format(tm2[1])}}mm</span></p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            {% if sd | length>0 %}
+            <h2>Next Month's Sea Level Predictions</h2>
+            <div class="prediction">
+                <h3>Sea Level</h3>
+                <p>Average: <span class="value">{{'%.2f' | format(sd[0])}}mm</span></p>
+            </div>
+            <div class="prediction">
+                <h3>Projected Changes</h3>
+                <p>Expected Change: <span class="value">
+                    {% if sd[1]>0 %}
+                        {{'%.2f' | format(sd[1])}}mm
+                    {% else %}
+                        {{'%.2f' | format(sd[1])}}mm
+                    {% endif %}
+                </span></p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            {%if cd | length>0 %}
+            <h2>Next Year's CO<sub>2</sub> Data</h2>
+            <div class="co2-data">
+                <p>CO<sub>2</sub>: <span class="value"> {{'%.2f' | format(cd[1])}}ppm</span></p>
+                <p>GDP: <span class="value">{{'%.2f' | format(cd[0])}}</span></p>
+                <p>Nitrous Oxide: <span class="value">{{'%.2f' | format(cd[2])}}</span></p>
+                <p>Temp Change from CH<sub>4</sub>: <span class="value">{{'%.2f' | format(cd[3])}}°C</span></p>
+                <p>Temp Change from CO<sub>2</sub>: <span class="value">{{'%.2f' | format(cd[4])}}°C</span></p>
+                <p>Temp Change from GHG: <span class="value">{{'%.2f' | format(cd[5])}}°C</span></p>
+                <p>Temp Change from NO<sub>2</sub>: <span class="value">{{'%.2f' | format(cd[6])}}°C</span></p>
+                <p>Total GHG: <span class="value">{{'%.2f' | format(cd[7])}}</span></p>
+                <p>Oil CO<sub>2</sub>: <span class="value">{{'%.2f' | format(cd[8])}}</span></p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 Climate Model. All Rights Reserved.</p>
+    </footer>
+</body>
+
+</html>
