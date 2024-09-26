@@ -188,4 +188,5 @@ def home():
     cdata=[CO2["gdp"].values[-1],CO2["co2"].values[-1],CO2["nitrous_oxide"].values[-1],CO2["temperature_change_from_ch4"].values[-1],CO2["temperature_change_from_co2"].values[-1],CO2["temperature_change_from_ghg"].values[-1],CO2["temperature_change_from_no2"].values[-1],CO2["total_ghg"].values[-1],CO2["oil_co2"].values[-1]]
     return render_template("home.html",td1=a[0],td2=c[0],tm1=b[0],tm2=d[0],f1=f1,f2=f2,sd=seaData,cd=cdata)
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT",4000))
+    app.run(host="0.0.0.0",port=port)
